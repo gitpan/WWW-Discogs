@@ -3,3 +3,6 @@ Revision history for Perl extension WWW::Discogs.
 0.01  Tue Jul  1 23:35:00 2008
 	- original version
 
+0.02  Wed Jul  2 09:57:00 2008
+	- bump perl requirement to 5.8
+	- documentation

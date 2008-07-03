@@ -24,3 +24,4 @@ lib/WWW/Discogs/Release.pm
 lib/WWW/Discogs/Label.pm
 lib/WWW/Discogs.pm
 Makefile.PL
+META.yml
