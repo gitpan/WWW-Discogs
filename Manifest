@@ -19,9 +19,8 @@ inc/Module/Install/Makefile.pm
 README
 Manifest
 lib/WWW/Discogs/Artist.pm
-lib/WWW/Discogs/Parser.pm
+lib/WWW/Discogs/Search.pm
 lib/WWW/Discogs/Release.pm
 lib/WWW/Discogs/Label.pm
 lib/WWW/Discogs.pm
 Makefile.PL
-META.yml

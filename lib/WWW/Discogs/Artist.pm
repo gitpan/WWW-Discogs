@@ -5,48 +5,42 @@ use warnings;
 
 sub new {
 	my ($class, %opts) = @_;
-	bless {}, $class;
+	bless \%opts, $class;
 }
 
-sub add_image {
-	my ($self, $uri) = @_;
-	push @{$self->{images}}, $uri;
+sub namevariations {
+	my $self = shift;
+	return $self->{namevariations}{name};
 }
 
 sub images {
 	my $self = shift;
-	return $self->{images};
+	return $self->{images}{image};
 }
 
-sub set_name {
-	my ($self, $name) = @_;
-	$self->{name} = $name;
-}
-
-sub name {
+sub primary_images {
 	my $self = shift;
-	return $self->{name};
+	return [ grep {$_->{type} eq 'primary'} @{$self->{images}{image}} ];
 }
 
-sub set_realname {
-	my ($self, $realname) = @_;
-	$self->{realname} = $realname;
-}
-
-sub realname {
+sub secondary_images {
 	my $self = shift;
-	return $self->{realname};
-}
-
-
-sub add_release {
-	my ($self, $release) = @_;
-	push @{ $self->{releases} }, $release;
+	return [ grep {$_->{type} eq 'secondary'} @{$self->{images}{image}} ];
 }
 
 sub releases {
 	my $self = shift;
-	return $self->{releases};
+	return $self->{releases}{release};
+}
+
+sub name {
+	my $self = shift;
+	return $self->{name}[0];
+}
+
+sub aliases {
+	my $self = shift;
+	return $self->{aliases}{name};
 }
 
 1;

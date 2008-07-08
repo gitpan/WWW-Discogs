@@ -8,19 +8,24 @@ sub new {
 	bless \%opts, $class;
 }
 
-sub add_image {
-	my ($self, $uri) = @_;
-	push @{$self->{images}}, $uri;
-}
-
 sub images {
 	my $self = shift;
-	return $self->{images};
+	return $self->{images}{image};
 }
 
-sub set_name {
-	my ($self, $name) = @_;
-	$self->{name} = $name;
+sub primary_images {
+	my $self = shift;
+	return [ grep {$_->{type} eq 'primary'} @{$self->{images}{image}} ];
+}
+
+sub secondary_images {
+	my $self = shift;
+	return [ grep {$_->{type} eq 'secondary'} @{$self->{images}{image}} ];
+}
+
+sub contactinfo {
+	my $self = shift;
+	return $self->{contactinfo};
 }
 
 sub name {
@@ -28,34 +33,14 @@ sub name {
 	return $self->{name};
 }
 
-sub set_parentLabel {
-	my ($self, $parentLabel) = @_;
-	$self->{parentLabel} = $parentLabel;
-}
-
-sub parentLabel {
-	my $self = shift;
-	return $self->{parentLabel};
-}
-
-sub add_sublabel {
-	my ($self, $sublabel) = @_;
-	$self->{sublabels} = $sublabel;
-}
-
 sub sublabels {
 	my $self = shift;
-	return $self->{sublabels};
-}
-
-sub add_release {
-	my ($self, $release) = @_;
-	push @{ $self->{releases} }, $release;
+	return [ keys %{$self->{sublabels}} ];
 }
 
 sub releases {
 	my $self = shift;
-	return $self->releases;
+	return $self->{releases}{release};
 }
 
 1;

@@ -6,3 +6,8 @@ Revision history for Perl extension WWW::Discogs.
 0.02  Wed Jul  2 09:57:00 2008
 	- bump perl requirement to 5.8
 	- documentation
+
+0.03  Mon Jul  7 15:39:00 2008
+	- use URI path and param methods to construct request
+	- switch to XML::Simple
+	- interface changes

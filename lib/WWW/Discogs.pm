@@ -4,13 +4,23 @@ use strict;
 use warnings;
 
 use LWP::UserAgent;
+use URI;
 use URI::Escape;
+use URI::QueryParam;
 use Compress::Zlib;
-use WWW::Discogs::Parser;
+use XML::Simple;
+use Encode;
+use Data::Dumper;
+
+use WWW::Discogs::Release;
+use WWW::Discogs::Artist;
+use WWW::Discogs::Label;
+use WWW::Discogs::Search;
 
 use constant {TRUE => 1, FALSE => 0};
 
-our $VERSION = '0.02';
+use 5.008;
+our $VERSION = '0.03';
 
 =head1 NAME
 
@@ -51,25 +61,23 @@ Interface with discogs.com api
 
 =head2 new( %params )
 
-Create a new instance. Takes a hash which must contain an apikey item. You may also
-provide an apiurl item to change the url that is queried (default is www.discogs.com).
+Create a new instance. Takes a hash which must contain an 'apikey' item. You may also
+provide an 'apiurl' item to change the url that is queried (default is www.discogs.com).
 
 =cut
 sub new {
 	my ($class, %opts) = @_;
 	my $self = {
-		apiurl	=> $opts{apiurl} || 'http://www.discogs.com/',
+		apiurl	=> $opts{apiurl} || 'http://www.discogs.com',
 		apikey	=> $opts{apikey},
 		ua		=> LWP::UserAgent->new,
-		parser	=> WWW::Discogs::Parser->new,
 	};
 	return bless $self, $class;
 }
 
 =head2 search( $searchstring )
 
-Do a search using $searchstring. This will return an arrayref of hashes. Each hash has a
-type (artist, release, or label), title, and optional url and summary.
+Returns a I<Discogs::Search> object.
 
 =cut
 
@@ -81,7 +89,10 @@ sub search {
 	});
 	
 	if ($res->is_success) {
-		return $self->{parser}->parse($res->content);
+		my $xml = XMLin($res->content, ForceArray => ['result']);
+		if ($xml->{stat} eq 'ok') {
+			return WWW::Discogs::Search->new(%$xml);
+		}
 	}
 
 	return FALSE;
@@ -89,8 +100,8 @@ sub search {
 
 =head2 release( $release_id )
 
-Returns a Discogs::Release object. You can get a $release_id from the
-releases method of Discogs::Artist or Discogs::Label.
+Returns a I<Discogs::Release> object. You can get a $release_id from a search,
+artist, or label.
 
 =cut
 
@@ -99,7 +110,15 @@ sub release {
 	if ($release =~ /^\d+$/) {
 		my $res = $self->_request("release/" . uri_escape($release));
 		if ($res->is_success) {
-			return $self->{parser}->parse($res->content);
+			my $xml = XMLin($res->content, ForceArray => [ 
+				'image',		'style',	'track',
+				'format',		'note',		'description',
+				'extraartist',	'genre',	'artist',
+				'label',
+			],KeyAttr => []);
+			if ($xml->{stat} eq 'ok' and exists $xml->{release}) {
+				return WWW::Discogs::Release->new(%{$xml->{release}});
+			}
 		}
 	}
 	
@@ -108,7 +127,7 @@ sub release {
 
 =head2 artist( $artist_name )
 
-Returns a Discogs::Artist object. You can get the exact name of an artist
+Returns a I<Discogs::Artist> object. You can get the exact name of an artist
 from a search result's title.
 
 =cut
@@ -117,7 +136,11 @@ sub artist {
 	my ($self, $artist) = @_;
 	my $res = $self->_request("artist/" . uri_escape($artist));
 	if ($res->is_success) {
-		return $self->{parser}->parse($res->content);
+		my $xml = XMLin($res->content,
+			ForceArray => ['image','name'], KeyAttr => ['name']);
+		if ($xml->{stat} eq 'ok' and exists $xml->{artist}) {
+			return WWW::Discogs::Artist->new(%{$xml->{artist}});
+		}
 	}
 
 	return FALSE;
@@ -134,7 +157,11 @@ sub label {
 	my ($self, $label) = @_;
 	my $res = $self->_request("label/" . uri_escape($label));
 	if ($res->is_success) {
-		return $self->{parser}->parse($res->content);
+		my $xml = XMLin($res->content, ForceArray => [
+			'release','image','sublabels'], KeyAttr => ['label']);
+		if ($xml->{stat} eq 'ok' and exists $xml->{label}) {
+			return WWW::Discogs::Label->new(%{$xml->{label}});
+		}
 	}
 	
 	return FALSE;
@@ -157,9 +184,12 @@ sub _create_url {
 
 	$params->{f} = 'xml';
 	$params->{api_key} = $self->{apikey};
-	my $paramstring = join "&", map { uri_escape($_) . "=" . uri_escape($params->{$_}) } keys %$params;
 
-	return lc $self->{apiurl} . "$path?$paramstring";
+	my $uri = URI->new($self->{apiurl},"http");
+	$uri->path($path);
+	$uri->query_form_hash($params);
+
+	return $uri->canonical->as_string;
 }
 
 =head1 AUTHOR

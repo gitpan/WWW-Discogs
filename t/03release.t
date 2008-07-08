@@ -1,16 +1,34 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 12;
+use Encode;
 
 BEGIN { use_ok 'WWW::Discogs', 'WWW::Discogs::Parser' }
 
 my $apikey = '5b4bea98ec';
 
-my $discogs = WWW::Discogs->new(apikey => $apikey)
-	or diag("couldn't create object: $!");
-
-is(ref $discogs, 'WWW::Discogs', "Object creation");
+my $discogs = WWW::Discogs->new(apikey => $apikey);
+is(ref $discogs, 'WWW::Discogs', "client");
 
 my $rel = $discogs->release(1);
-is($rel->title, 'Stockholm', "Compare release name");
+is(ref $rel, 'WWW::Discogs::Release','release');
+
+is($rel->country, 'Sweden', "name");
+is($rel->title, 'Stockholm', "name");
+is($rel->released, "1999-03-00");
+is($rel->id, 1);
+
+is_deeply($rel->styles, ["Deep House"]);
+is_deeply($rel->formats, ["Vinyl"]);
+is_deeply($rel->genres, ["Electronic"], "genre");
+is_deeply($rel->labels, [{name => "Svek", catno => 'SK032'}], "labels");
+
+for (@{$rel->tracklist}) {
+	if ($_->{position} eq "A") {
+		is_deeply($_, {
+				position	=> "A",
+				title		=> encode("UTF-8","\x{00d6}stermalm"),
+				duration	=> "4:45" }, 'tracklist');
+	}
+}
