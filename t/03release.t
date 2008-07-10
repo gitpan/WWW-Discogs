@@ -25,10 +25,10 @@ is_deeply($rel->genres, ["Electronic"], "genre");
 is_deeply($rel->labels, [{name => "Svek", catno => 'SK032'}], "labels");
 
 for (@{$rel->tracklist}) {
-	if ($_->{position} eq "A") {
+	if ($_->{position} eq "B1") {
 		is_deeply($_, {
-				position	=> "A",
-				title		=> encode("UTF-8","\x{00d6}stermalm"),
-				duration	=> "4:45" }, 'tracklist');
+				position	=> "B1",
+				title		=> "Vasastaden",
+				duration	=> "6:11" }, 'tracklist');
 	}
 }

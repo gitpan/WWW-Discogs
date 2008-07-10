@@ -8,11 +8,31 @@ sub new {
 	bless \%opts, $class;
 }
 
+=head1 NAME
+
+WWW::Discogs::Search
+
+=cut
+
+=head1 METHODS
+
+=cut
+
+=head2 exactresults
+
+returns an arrayref of results that matched exactly
+
+=cut
 sub exactresults {
 	my $self = shift;
 	return $self->{exactresults}{result};
 }
 
+=head2 searchresults
+
+returns an arrayref of normal search results
+
+=cut
 sub searchresults {
 	my $self = shift;
 	return $self->{searchresults}{result};

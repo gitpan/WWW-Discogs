@@ -10,48 +10,58 @@ use URI::QueryParam;
 use Compress::Zlib;
 use XML::Simple;
 use Encode;
-use Data::Dumper;
 
 use WWW::Discogs::Release;
 use WWW::Discogs::Artist;
 use WWW::Discogs::Label;
 use WWW::Discogs::Search;
 
-use constant {TRUE => 1, FALSE => 0};
-
 use 5.008;
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 =head1 NAME
 
 WWW::Discogs
 
+=cut
+
 =head1 DESCRIPTION
 
 Interface with discogs.com api
 
+=cut
+
 =head1 SYNOPSIS
+
 	use WWW:Discogs;
 
 	my $client = WWW::Discogs->new(apikey => 1234567);
 
 	# Print all artist images from a search
 	#
-	my $results = $client->search("Ween");
+	my $search = $client->search("Ween");
 	
-	for my $result (@$results) {
+	for my $result (@{ $search->exactresults }) {
 		if ($result->{type} eq 'artist') {
 			my $artist = $client->artist( $result->{title} );
-			print "$_\n" for @{ $artist->images };
+			print $artist->name . "\n";
+			if ($artist->images) {
+				print "$_->{uri}\n" for @{ $artist->images };
+			}
 		}
 	}
 
 	# Print all the album covers for an artist
 	#
 	my $artist = $client->artist("Ween");
-	for my $releaseid (@{ $artist->releases }) {
-		my $release = $client->release($releaseid);
-		print "$_\n" for @{ $release->images };
+	for my (@{ $artist->releases }) {
+		my $release = $client->release($_->{id});
+		if ($release->images) {
+			print $release->title . "\n";
+			for my $image (@{ $release->primaryimages }) {
+				print $image->{uri};
+			}
+		}
 	}
 =cut
 
@@ -95,7 +105,7 @@ sub search {
 		}
 	}
 
-	return FALSE;
+	return undef;
 }
 
 =head2 release( $release_id )
@@ -122,7 +132,7 @@ sub release {
 		}
 	}
 	
-	return FALSE;
+	return undef;
 }
 
 =head2 artist( $artist_name )
@@ -143,7 +153,7 @@ sub artist {
 		}
 	}
 
-	return FALSE;
+	return undef;
 }
 
 =head2 label( $label_name )
@@ -164,7 +174,7 @@ sub label {
 		}
 	}
 	
-	return FALSE;
+	return undef;
 }
 
 sub _request {
