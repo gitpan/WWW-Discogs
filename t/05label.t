@@ -14,10 +14,9 @@ my $label = $discogs->label("Svek");
 is(ref $label, 'WWW::Discogs::Label', 'label');
 
 is($label->name, "Svek", "name");
+is_deeply($label->sublabels, "Birdy",'sublabels');
 
-is_deeply($label->sublabels, ["Birdy"],'sublabels');
-
-for (@{$label->releases}) {
+for ($label->releases) {
 	if ($_->{id} == 116265) {
 		is_deeply($_, {
 			'artist'	=> 'Calico',

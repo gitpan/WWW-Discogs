@@ -21,13 +21,14 @@ our $VERSION = '0.04';
 
 =head1 NAME
 
-WWW::Discogs
+WWW::Discogs - get music related information and images
 
 =cut
 
 =head1 DESCRIPTION
 
-Interface with discogs.com api
+Interface with discogs.com api to get music related information and
+images.
 
 =cut
 
@@ -41,12 +42,12 @@ Interface with discogs.com api
 	#
 	my $search = $client->search("Ween");
 	
-	for my $result (@{ $search->exactresults }) {
+	for my $result ($search->exactresults) {
 		if ($result->{type} eq 'artist') {
 			my $artist = $client->artist( $result->{title} );
 			print $artist->name . "\n";
 			if ($artist->images) {
-				print "$_->{uri}\n" for @{ $artist->images };
+				print join "\n", $artist->images;
 			}
 		}
 	}
@@ -54,12 +55,12 @@ Interface with discogs.com api
 	# Print all the album covers for an artist
 	#
 	my $artist = $client->artist("Ween");
-	for my (@{ $artist->releases }) {
+	for my ($artist->releases) {
 		my $release = $client->release($_->{id});
 		if ($release->images) {
 			print $release->title . "\n";
-			for my $image (@{ $release->primaryimages }) {
-				print $image->{uri};
+			if ($release->primaryimages) {
+				print join "\n", $release->primaryimages;
 			}
 		}
 	}
@@ -87,7 +88,7 @@ sub new {
 
 =head2 search( $searchstring )
 
-Returns a I<Discogs::Search> object.
+Returns a L<Discogs::Search> object.
 
 =cut
 
@@ -110,7 +111,7 @@ sub search {
 
 =head2 release( $release_id )
 
-Returns a I<Discogs::Release> object. You can get a $release_id from a search,
+Returns a L<Discogs::Release> object. You can get a $release_id from a search,
 artist, or label.
 
 =cut
@@ -137,7 +138,7 @@ sub release {
 
 =head2 artist( $artist_name )
 
-Returns a I<Discogs::Artist> object. You can get the exact name of an artist
+Returns a L<Discogs::Artist> object. You can get the exact name of an artist
 from a search result's title.
 
 =cut

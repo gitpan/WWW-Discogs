@@ -5,7 +5,7 @@ use warnings;
 
 =head1 NAME
 
-WWW::Discogs::Release
+WWW::Discogs::Release - get music release information and images
 
 =head1 METHODS
 
@@ -28,53 +28,53 @@ sub title {
 
 =head2 artists
 
-returns an arrayref of artist names
+returns an list of artist names
 
 =cut
 sub artists {
 	my $self = shift;
-	return $self->{artists}{artist};
+	return @{ $self->{artists}{artist} };
 }
 
 
 =head2 images
 
-Returns an arrayref of images
+Returns an list of images
 
 =cut
 sub images {
 	my $self = shift;
-	return $self->{images}{image};
+	return @{ $self->{images}{image} };
 }
 
 =head2 primary_images
 
-Returns an arrayref of the primary images
+Returns an list of the primary images
 
 =cut
 sub primary_images {
 	my $self = shift;
-	return [ grep {$_->{type} eq 'primary'} @{$self->{images}{image}} ];
+	return grep {$_->{type} eq 'primary'} @{$self->{images}{image}};
 }
 
 =head2 secondary_images
 
-returns an arrayref of the secondary images
+returns an list of the secondary images
 
 =cut
 sub secondary_images {
 	my $self = shift;
-	return [ grep {$_->{type} eq 'secondary'} @{$self->{images}{image}} ];
+	return grep {$_->{type} eq 'secondary'} @{$self->{images}{image}};
 }
 
 =head2 styles
 
-returns an arrayref of styles
+returns an list of styles
 
 =cut
 sub styles {
 	my $self = shift;
-	return $self->{styles}{style};
+	return @{ $self->{styles}{style} };
 }
 
 =head2 released
@@ -90,43 +90,42 @@ sub released {
 
 =head2 tracklist
 
-returns an arrayref of tracks
+returns an list of tracks
 
 =cut
 sub tracklist {
 	my $self = shift;
-	my $tracklist = $self->{tracklist}{track};
-	return $tracklist;
+	return @{ $self->{tracklist}{track} };
 }
 
 =head2 extraartists
 
-returns an arrayref of artists
+returns an list of artists
 
 =cut
 sub extraartists {
 	my $self = shift;
-	return $self->{extraartists}{artist};
+	return @{ $self->{extraartists}{artist} };
 }
 
 =head2 genres
 
-returns an arrayref of genre names
+returns an list of genre names
 
 =cut
 sub genres {
 	my $self = shift;
-	return $self->{genres}{genre};
+	return @{ $self->{genres}{genre} };
 }
 
 =head2 labels
 
-returns an arrayref of labels
+returns an list of labels
 
 =cut
 sub labels {
 	my $self = shift;
-	return $self->{labels}{label};
+	return @{ $self->{labels}{label} };
 }
 
 
@@ -142,12 +141,12 @@ sub country {
 
 =head2 formats
 
-returns an arrayref of formats
+returns an list of formats
 
 =cut
 sub formats {
 	my $self = shift;
-	return [ map {$_->{name}} @{$self->{formats}{format}} ];
+	return map {$_->{name}} @{$self->{formats}{format}};
 }
 
 =head2 id
@@ -162,12 +161,12 @@ sub id {
 
 =head2 notes
 
-returns an arrayref of notes
+returns an list of notes
 
 =cut
 sub notes {
 	my $self = shift;
-	return $self->{notes};
+	return @{ $self->{notes} };
 }
 
 1;

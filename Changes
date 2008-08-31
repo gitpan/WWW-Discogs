@@ -16,3 +16,6 @@ Revision history for Perl extension WWW::Discogs.
 	- fix broken test
 	- begin documenting response classes (release, artist,
 	  label, search)
+
+0.05  Sun Jul 13 14:18:00 2008
+	- return lists instead of arrayrefs

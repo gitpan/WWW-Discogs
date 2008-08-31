@@ -10,7 +10,7 @@ sub new {
 
 =head1 NAME
 
-WWW::Discogs::Artist
+WWW::Discogs::Artist - get musician information and images
 
 =cut
 
@@ -30,63 +30,63 @@ sub name {
 
 =head2 aliases
 
-returns an arrayref of aliases
+returns an list of aliases
 
 =cut
 sub aliases {
 	my $self = shift;
-	return $self->{aliases}{name};
+	return @{ $self->{aliases}{name} };
 }
 
 
 =head2 namevariations
 
-returns an arrayref of name variations
+returns an list of name variations
 
 =cut
 sub namevariations {
 	my $self = shift;
-	return $self->{namevariations}{name};
+	return @{ $self->{namevariations}{name} };
 }
 
 =head2 images
 
-returns an arrayref of images
+returns an list of images
 
 =cut
 sub images {
 	my $self = shift;
-	return $self->{images}{image};
+	return @{ $self->{images}{image} };
 }
 
 =head2 primary_images
 
-returns an arrayref of primary images
+returns an list of primary images
 
 =cut
 sub primary_images {
 	my $self = shift;
-	return [ grep {$_->{type} eq 'primary'} @{$self->{images}{image}} ];
+	return grep {$_->{type} eq 'primary'} @{$self->{images}{image}};
 }
 
 =head2 secondary_images
 
-returns an arrayref of secondary images
+returns an list of secondary images
 
 =cut
 sub secondary_images {
 	my $self = shift;
-	return [ grep {$_->{type} eq 'secondary'} @{$self->{images}{image}} ];
+	return grep {$_->{type} eq 'secondary'} @{$self->{images}{image}};
 }
 
 =head2 releases
 
-returns an arrayref of releases
+returns an list of releases
 
 =cut
 sub releases {
 	my $self = shift;
-	return $self->{releases}{release};
+	return @{ $self->{releases}{release} };
 }
 
 1;

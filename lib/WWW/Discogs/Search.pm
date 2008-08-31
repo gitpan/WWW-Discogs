@@ -20,22 +20,22 @@ WWW::Discogs::Search
 
 =head2 exactresults
 
-returns an arrayref of results that matched exactly
+returns an list of results that matched exactly
 
 =cut
 sub exactresults {
 	my $self = shift;
-	return $self->{exactresults}{result};
+	return @{ $self->{exactresults}{result} };
 }
 
 =head2 searchresults
 
-returns an arrayref of normal search results
+returns an list of normal search results
 
 =cut
 sub searchresults {
 	my $self = shift;
-	return $self->{searchresults}{result};
+	return @{ $self->{searchresults}{result} };
 }
 
 1;
