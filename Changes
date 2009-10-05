@@ -19,3 +19,6 @@ Revision history for Perl extension WWW::Discogs.
 
 0.05  Sun Jul 13 14:18:00 2008
 	- return lists instead of arrayrefs
+
+0.06  Mon Oct 05 04:29:00 2009
+  - updated tests to pass with new discogs info

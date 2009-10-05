@@ -14,8 +14,8 @@ my $artist = $discogs->artist("Bill Callahan");
 is(ref $artist, 'WWW::Discogs::Artist', 'artist');
 
 is_deeply($artist->name, "Bill Callahan", 'name');
-is_deeply($artist->namevariations, "B. Callahan", 'namevariations');
-is_deeply($artist->aliases, 'Smog', 'aliases');
+is_deeply(($artist->namevariations)[0], "B. Callahan", 'namevariations');
+is_deeply(($artist->aliases)[0], 'Smog', 'aliases');
 
 for ($artist->releases) {
 	if ($_->{id} == 975091) {
@@ -29,6 +29,7 @@ for ($artist->releases) {
 				id			=> '975091',
 				year		=> '2007'
 			}, 'release');
+    last;
 	}
 }
 
