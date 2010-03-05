@@ -23,7 +23,7 @@ for ($label->releases) {
 			'format'	=> '12"',
 			'status'	=> 'Accepted',
 			'title'		=> 'Unfinished Diary Chapter One',
-			'catno'		=> 'SK001',
+			'catno'		=> 'SK 001',
 			'id'		=> '116265'}, 'release');
 	}
 }
