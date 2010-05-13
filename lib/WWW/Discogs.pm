@@ -17,7 +17,7 @@ use WWW::Discogs::Label;
 use WWW::Discogs::Search;
 
 use 5.008;
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 =head1 NAME
 
@@ -101,7 +101,7 @@ sub search {
 	
 	if ($res->is_success) {
 		my $xml = XMLin($res->content, ForceArray => ['result']);
-		if ($xml->{stat} eq 'ok') {
+		if ($xml->{stat} eq 'ok' && $xml->{searchresults}->{numResults} > 0) {
 			return WWW::Discogs::Search->new(%$xml);
 		}
 	}
