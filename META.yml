@@ -1,28 +1,33 @@
----
-abstract: 'get music related information and images'
+--- #YAML:1.0
+name:               WWW-Discogs
+version:            0.11
+abstract:           get music related information and images
 author:
-  - 'Lee Aylward <lee@laylward.com>'
-build_requires:
-  ExtUtils::MakeMaker: 6.42
-  Test::More: 0
+    - Michal Gasek <michal@gasek.eu>
+license:            perl
+distribution_type:  module
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
-distribution_type: module
-generated_by: 'Module::Install version 1.00'
-license: perl
-meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.4.html
-  version: 1.4
-name: WWW-Discogs
-no_index:
-  directory:
-    - inc
-    - t
+    ExtUtils::MakeMaker:  0
+build_requires:
+    File::Slurp:          0
+    HTTP::Response:       0
+    Test::Deep:           0
+    Test::Exception:      0
+    Test::Mock::LWP::Dispatch:  0.03
+    Test::More:           0
 requires:
-  LWP::UserAgent: 0
-  URI: 0
-  XML::Simple: 0
-  perl: 5.8.0
-resources:
-  license: http://dev.perl.org/licenses/
-version: 0.10
+    JSON::XS:        0
+    LWP::UserAgent:  0
+    NEXT:            0
+    perl:            5.8
+    URI:             0
+    URI::Escape:     0
+no_index:
+    directory:
+        - t
+        - inc
+        - requests
+generated_by:       ExtUtils::MakeMaker version 6.56
+meta-spec:
+    url:      http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:  1.4
